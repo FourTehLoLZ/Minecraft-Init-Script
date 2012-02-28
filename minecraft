@@ -14,7 +14,7 @@
 ### END INIT INFO
 
 #Settings
-BUKKITURL='http://ci.bukkit.org/job/dev-CraftBukkit/promotion/latest/Recommended/artifact/target/craftbukkit-0.0.1-SNAPSHOT.jar'
+BUKKITURL='http://cbukk.it/craftbukkit.jar'
 SERVICE='minecraft_server.jar'
 OPTIONS='nogui'
 USERNAME='mcuser'
