@@ -45,7 +45,7 @@ mc_start() {
   else
     echo "Starting $SERVICE..."
     cd $MCPATH
-    as_user "cd $MCPATH && screen -dmS minecraft $INVOCATION"
+    as_user "cd $MCPATH && screen -dmS $SCREENNAME $INVOCATION"
     sleep 7
     if ps ax | grep -v grep | grep -v -i SCREEN | grep $SCREENNAME > /dev/null
     then
@@ -150,7 +150,7 @@ mc_backup() {
        then
          continue
        else
-         as_user "screen -p 0 -S minecraft -X eval 'stuff \"say Backing up world file...\"\015'"
+         as_user "screen -p 0 -S $SCREENNAME -X eval 'stuff \"say Backing up world file...\"\015'"
          as_user "tar -zcf $BACKUPPATH/mcbackup_$DATETIME-$i.tar.gz $MCPATH/world-morbi"
          echo "Backed up world"
          as_user "find $BACKUPPATH/* -mtime +7 -exec rm {} \;"
@@ -158,7 +158,7 @@ mc_backup() {
        fi
      done
    else
-     as_user "screen -p 0 -S minecraft -X eval 'stuff \"say Backing up world file...\"\015'"
+     as_user "screen -p 0 -S $SCREENNAME -X eval 'stuff \"say Backing up world file...\"\015'"
      as_user "tar -zcf $BACKUPPATH/mcbackup_$DATETIME.tar.gz $MCPATH/world-morbi"
      echo "Backed up world"
      as_user "find $BACKUPPATH/* -mtime +7 -exec rm {} \;"
@@ -173,7 +173,7 @@ mc_command() {
     if ps ax | grep -v grep | grep -v -i SCREEN | grep $SCREENNAME > /dev/null
     then
       echo "$SERVICE is running... executing command"
-      as_user "screen -p 0 -S minecraft -X eval 'stuff \"$command\"\015'"
+      as_user "screen -p 0 -S $SCREENNAME -X eval 'stuff \"$command\"\015'"
     fi
     else
       echo "Must specify server command"
