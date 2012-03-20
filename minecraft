@@ -13,21 +13,21 @@
 # Description:    Starts the minecraft server
 ### END INIT INFO
 
-#Settings
-BUKKITURL='http://cbukk.it/craftbukkit.jar'
-SERVICE='minecraft_server.jar'
-SCREENNAME='minecraft_screen'
-OPTIONS='nogui'
-USERNAME='mcuser'
-WORLD='world'
-MCDIR='/opt/minecraft'
-MCPATH='/opt/minecraft/server'
-DATE=`date "+%Y.%m.%d"`
-TIME=`date "+%H:%M"`
-BACKUPPATH='/opt/minecraft/backup'
+#SETTINGS
+
+#Server Settings
 DATETIME=`date "+%Y.%m.%d_%H:%M"`
-CPU_COUNT=4
-INVOCATION="java -Xmx1280M -Xms512M -XX:+UseParallelGC -jar $SERVICE nogui"
+MCPATH='/opt/minecraft/server'
+BACKUPPATH='/opt/minecraft/backup'
+USERNAME='mcuser'
+SCREENNAME='minecraft_screen'
+
+#Minecraft Server Settings
+SERVICE='minecraft_server.jar'
+OPTIONS='-Xms512M -Xmx1280M -XX:+UseParallelGC -jar'
+WORLD='world'
+BUKKITURL='http://cbukk.it/craftbukkit.jar'
+INVOCATION="java $OPTIONS $SERVICE nogui"
 
 ME=`whoami`
 as_user() {
