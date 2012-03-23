@@ -38,7 +38,7 @@ as_user() {
 }
 
 mc_start() {
-  if ps ax | grep -v grep | grep -v -i SCREEN | grep $SCREENNAME > /dev/null
+  if ps ax | grep -v grep | grep $SCREENNAME > /dev/null
   then
     echo "$SERVICE is already running!"
   else
@@ -46,7 +46,7 @@ mc_start() {
     cd $MCPATH
     as_user "cd $MCPATH && screen -dmS $SCREENNAME $INVOCATION"
     sleep 7
-    if ps ax | grep -v grep | grep -v -i SCREEN | grep $SCREENNAME > /dev/null
+    if ps ax | grep -v grep | grep $SCREENNAME > /dev/null
     then
       echo "$SERVICE is now running."
     else
@@ -56,7 +56,7 @@ mc_start() {
 }
 
 mc_saveoff() {
-  if ps ax | grep -v grep | grep -v -i SCREEN | grep $SCREENNAME > /dev/null
+  if ps ax | grep -v grep | grep $SCREENNAME > /dev/null
   then
     echo "$SERVICE is running... suspending saves"
     as_user "screen -p 0 -S $SCREENNAME -X eval 'stuff \"say SERVER BACKUP STARTING. Server going readonly...\"\015'"
@@ -70,7 +70,7 @@ mc_saveoff() {
 }
 
 mc_saveon() {
-  if ps ax | grep -v grep | grep -v -i SCREEN | grep $SCREENNAME > /dev/null
+  if ps ax | grep -v grep | grep $SCREENNAME > /dev/null
   then
     echo "$SERVICE is running... re-enabling saves"
     as_user "screen -p 0 -S $SCREENNAME -X eval 'stuff \"save-on\"\015'"
@@ -81,7 +81,7 @@ mc_saveon() {
 }
 
 mc_stop() {
-  if ps ax | grep -v grep | grep -v -i SCREEN | grep $SCREENNAME > /dev/null
+  if ps ax | grep -v grep | grep $SCREENNAME > /dev/null
   then
     echo "Stopping $SERVICE"
     as_user "screen -p 0 -S $SCREENNAME -X eval 'stuff \"say SERVER SHUTTING DOWN! Saving map...\"\015'"
@@ -94,7 +94,7 @@ mc_stop() {
   else
     echo "$SERVICE was not running."
   fi
-  if ps ax | grep -v grep | grep -v -i SCREEN | grep $SCREENNAME > /dev/null
+  if ps ax | grep -v grep | grep $SCREENNAME > /dev/null
   then
     echo "Error! $SERVICE could not be stopped."
   else
@@ -103,7 +103,7 @@ mc_stop() {
 }
 
 mc_update() {
-  if ps ax | grep -v grep | grep -v -i SCREEN | grep $SCREENNAME > /dev/null
+  if ps ax | grep -v grep | grep $SCREENNAME > /dev/null
   then
     echo "$SERVICE is running! Will not start update."
   else
@@ -150,7 +150,7 @@ mc_backup() {
          continue
        else
          as_user "screen -p 0 -S $SCREENNAME -X eval 'stuff \"say Backing up world file...\"\015'"
-         as_user "tar -zcf $BACKUPPATH/mcbackup_$DATETIME-$i.tar.gz $MCPATH/world-morbi"
+         as_user "tar -zcf $BACKUPPATH/mcbackup_$DATETIME-$i.tar.gz $MCPATH"
          echo "Backed up world"
          as_user "find $BACKUPPATH/* -mtime +7 -exec rm {} \;"
          break
@@ -158,10 +158,29 @@ mc_backup() {
      done
    else
      as_user "screen -p 0 -S $SCREENNAME -X eval 'stuff \"say Backing up world file...\"\015'"
-     as_user "tar -zcf $BACKUPPATH/mcbackup_$DATETIME.tar.gz $MCPATH/world-morbi"
+     as_user "tar -zcf $BACKUPPATH/mcbackup_$DATETIME.tar.gz $MCPATH"
      echo "Backed up world"
      as_user "find $BACKUPPATH/* -mtime +7 -exec rm {} \;"
    fi
+   echo "Backing up logs sensibly..."
+   echo "Checking for backup folder..."
+   if [ -d $LOGBACKUPPATH ]
+   then
+     echo "Found $LOGBACKUPPATH"
+   else
+     echo "Could not find $LOGBACKUPPATH"
+     echo "Creating $LOGBACKUPPATH..."
+     as_user "mkdir $LOGBACKUPPATH"
+     if [ -d $LOGBACKUPPATH ]
+     then
+       echo "Successfully created $LOGBACKUPPATH"
+     else
+       echo "Could not create $LOGBACKUPPATH"
+       exit 0
+     fi
+   fi
+   as_user "cp $MCPATH/server.log $LOGBACKUPPATH/server_$DATETIME.log"
+   as_user "echo -n > $MCPATH/server.log"
    echo "Backup complete"
 }
 
@@ -169,7 +188,7 @@ mc_command() {
   if [ "$1" ]
   then
     command="$1";
-    if ps ax | grep -v grep | grep -v -i SCREEN | grep $SCREENNAME > /dev/null
+    if ps ax | grep -v grep | grep $SCREENNAME > /dev/null
     then
       echo "$SERVICE is running... executing command"
       as_user "screen -p 0 -S $SCREENNAME -X eval 'stuff \"$command\"\015'"
@@ -203,7 +222,7 @@ case "$1" in
     mc_saveon
     ;;
   status)
-    if ps ax | grep -v grep | grep -v -i SCREEN | grep $SCREENNAME > /dev/null
+    if ps ax | grep -v grep | grep $SCREENNAME > /dev/null
     then
       echo "$SERVICE is running."
     else
