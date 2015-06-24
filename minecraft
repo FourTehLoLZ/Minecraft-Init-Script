@@ -25,7 +25,7 @@ SCREENNAME='minecraft_screen'
 SERVICE='minecraft_server.jar'
 OPTIONS='-Xms512M -Xmx1280M -XX:+UseParallelGC -jar'
 WORLD='world'
-BUKKITURL='http://cbukk.it/craftbukkit.jar'
+UPDATEURL='http://minecraft.net/download/minecraft_server.jar'
 INVOCATION="java $OPTIONS $SERVICE nogui"
 
 ME=`whoami`
@@ -107,7 +107,7 @@ mc_update() {
   then
     echo "$SERVICE is running! Will not start update."
   else
-    as_user "cd $MCPATH && wget -q -O $MCPATH/$SERVICE.update $BUKKITURL"
+    as_user "cd $MCPATH && wget -q -O $MCPATH/$SERVICE.update $UPDATEURL"
     if [ -f $MCPATH/$SERVICE.update ]
     then
       if `diff $MCPATH/$SERVICE $MCPATH/$SERVICE.update >/dev/null`
